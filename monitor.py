@@ -24,6 +24,15 @@ _buffer = []
 _last_run: dict = {}
 _market_snapshot: dict = {}
 _last_analysis: datetime = None
+_nls_alarms_sent: set = set()   # Tracks coins with active NLS alarms this session
+
+# Coins that should never get a futures alarm
+STABLECOINS = {'USDC', 'USDT', 'BUSD', 'DAI', 'TUSD', 'FDUSD', 'USDE'}
+
+# NLS pattern for closing a long:
+# --xxx = sellers dominant in 15m and 1h → exit signal
+# (PDF recommends shorter timeframes for futures)
+NLS_EXIT_PATTERN = '--xxx'
 
 SYSTEM_PROMPT = """You are a crypto trading assistant analyzing data from MikaBot, a Turkish crypto signal bot.
 
@@ -384,6 +393,57 @@ async def run_command(command: str, wait: int = 10):
         print(f"  [!] No response for '{command}' — will retry next cycle")
 
 
+# ── NLS exit alarm setup ─────────────────────────────────────────────────────
+
+def _get_buy_candidates() -> list:
+    """Returns coins meeting strict buy criteria for NLS alarm setup."""
+    ssr  = _parse_ssreport()
+    bls  = _parse_bestlongshort()
+    weak = _parse_weakcoin()
+
+    candidates = []
+    for sym, d in ssr.items():
+        if sym in STABLECOINS:
+            continue
+        if sym in weak:
+            continue
+        if d['ss'] < 5:
+            continue
+        if d['mts'] >= 1.5:
+            continue
+        if bls.get(sym, {}).get('score', 0) < 4:
+            continue
+        candidates.append(sym)
+
+    return candidates
+
+
+async def setup_nls_alarms():
+    """Send NLS exit alarm commands to MikaBot for all current buy candidates."""
+    candidates = _get_buy_candidates()
+    new_alarms = [c for c in candidates if c not in _nls_alarms_sent]
+
+    if not new_alarms:
+        print('[NLS] No new buy candidates — no alarms to set.')
+        return
+
+    for coin in new_alarms:
+        cmd = f'Nls {coin} {NLS_EXIT_PATTERN}:order futures %100 {coin}'
+        print(f'[NLS] Setting exit alarm: {cmd}')
+        await client.send_message(MIKABOT_USERNAME, cmd)
+        _nls_alarms_sent.add(coin)
+        await asyncio.sleep(2)
+
+    lines = [f'• {c}  →  `Nls {c} {NLS_EXIT_PATTERN}:order futures %100 {c}`' for c in new_alarms]
+    msg = (
+        f'🔔 *NLS Exit Alarms Set [{datetime.now().strftime("%H:%M")}]*\n\n'
+        + '\n'.join(lines)
+        + '\n\n_Auto-closes 100% of futures position when 15m + 1h turn bearish_'
+    )
+    await client.send_message('me', msg, parse_mode='md')
+    print(f'[NLS] {len(new_alarms)} alarm(s) set: {", ".join(new_alarms)}')
+
+
 # ── Clock alignment ──────────────────────────────────────────────────────────
 
 def seconds_until_next_15min() -> float:
@@ -419,6 +479,7 @@ async def monitoring_loop():
         analysis = analyze_market()
         print_analysis(analysis)
         await notify_self(analysis)
+        await setup_nls_alarms()
 
         wait = seconds_until_next_15min()
         if wait > 0:
