@@ -4,9 +4,11 @@ A Python bot that connects to [MikaBot](https://t.me/tradermikabot) — a Turkis
 
 ## Features
 
-- **Discovery mode** — sends every MikaBot command once and saves all responses to a local knowledge base
-- **Monitor mode** — polls key market commands every 15 minutes, runs Groq AI analysis on the data, and sends a summary to your Telegram "Saved Messages"
+- **Discovery mode** — sends every MikaBot command once, saves all responses to `data/knowledge_base.json`
 - **Test mode** — quick one-off check (`help` + `egitim` commands)
+- **Monitor mode** — continuous market monitoring, runs at exact :00 :15 :30 :45 clock boundaries
+- **AI analysis** — Groq (llama-3.3-70b) analyses MikaBot data every cycle and sends summary to Telegram Saved Messages
+- **Auto NLS alarms** — sets MikaBot exit alarms for every buy candidate, auto-closes futures positions when 15m + 1h turn bearish
 
 ## Requirements
 

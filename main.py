@@ -1,6 +1,7 @@
 """
 Quick one-off test: sends help + egitim to MikaBot and prints responses.
 """
+# README: **Test mode** — quick one-off check (`help` + `egitim` commands)
 import asyncio
 import os
 from dotenv import load_dotenv

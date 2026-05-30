@@ -2,6 +2,7 @@
 Run once to learn all MikaBot commands.
 Saves responses to data/knowledge_base.json
 """
+# README: **Discovery mode** — sends every MikaBot command once, saves all responses to `data/knowledge_base.json`
 import asyncio
 import json
 import os

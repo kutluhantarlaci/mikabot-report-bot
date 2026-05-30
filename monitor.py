@@ -1,6 +1,9 @@
 """
 Continuous market monitor with Groq AI analysis.
 """
+# README: **Monitor mode** — continuous market monitoring, runs at exact :00 :15 :30 :45 clock boundaries
+# README: **AI analysis** — Groq (llama-3.3-70b) analyses MikaBot data every cycle and sends summary to Telegram Saved Messages
+# README: **Auto NLS alarms** — sets MikaBot exit alarms for every buy candidate, auto-closes futures positions when 15m + 1h turn bearish
 import asyncio
 import json
 import os
