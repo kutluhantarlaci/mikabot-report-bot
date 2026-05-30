@@ -39,17 +39,17 @@ PARAMETRIC_COMMANDS = [
     'trend {coin}',
 ]
 
-# Market commands polled continuously — interval in minutes
+# Market commands polled continuously — ordered by priority (least critical first, most critical last)
+# Each command takes ~15s, so last commands are freshest when AI analysis runs
 MONITOR_SCHEDULE = {
-    'ka':             15,   # Kurnaz Avcı coin recommendations
-    'ssreport':       15,   # Smart Score Report — only trade coins here
-    'MarketAnaliz':   15,   # AI market analysis
-    'ap':             15,   # Altcoin power — critical buy/sell threshold
-    # aisignal disabled by MikaBot as of 2026
-    'BestLongShort':  15,   # Buy/sell pressure per coin
-    'strongcoin':     15,   # Trending strong coins
-    'weakcoin':       15,   # Avoid list
+    'strongcoin':     15,   # Trending strong coins — changes slowly
+    'weakcoin':       15,   # Avoid list — changes slowly
     'ci s2 d':        15,   # Best coins: resist drops + rise with BTC
+    'MarketAnaliz':   15,   # AI market analysis
     'inout':          15,   # Cash flow report
+    'ap':             15,   # Altcoin power — critical buy/sell threshold
+    'BestLongShort':  15,   # Buy/sell pressure per coin
     'dayhigh':        15,   # Coins hitting 24h highs — momentum
+    'ssreport':       15,   # Smart Score Report — only trade coins here
+    'ka':             15,   # Kurnaz Avcı coin recommendations — fetched last, freshest
 }
