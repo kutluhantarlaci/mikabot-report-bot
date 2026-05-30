@@ -7,7 +7,7 @@ import os
 import re
 from dotenv import load_dotenv
 from groq import Groq
-from datetime import datetime
+from datetime import datetime, timedelta
 from telethon import TelegramClient, events
 from commands import MONITOR_SCHEDULE
 
@@ -384,40 +384,47 @@ async def run_command(command: str, wait: int = 10):
         print(f"  [!] No response for '{command}' — will retry next cycle")
 
 
+# ── Clock alignment ──────────────────────────────────────────────────────────
+
+def seconds_until_next_15min() -> float:
+    """Returns seconds until the next :00, :15, :30, or :45 boundary."""
+    now = datetime.now()
+    total_seconds = now.minute * 60 + now.second + now.microsecond / 1_000_000
+    elapsed_in_interval = total_seconds % 900  # 900s = 15 min
+    if elapsed_in_interval == 0:
+        return 0.0
+    return 900 - elapsed_in_interval
+
+
 # ── Main loop ────────────────────────────────────────────────────────────────
 
 async def monitoring_loop():
-    global _last_analysis
     print("Market monitor running. Press Ctrl+C to stop.\n")
-    print("Schedule: AI analysis every 15 min | data refresh every 15 min\n")
+    print("Schedule: runs at every :00, :15, :30, :45\n")
 
-    for command in MONITOR_SCHEDULE:
-        await run_command(command)
-        await asyncio.sleep(5)
-
-    print("[AI] Running initial analysis...")
-    analysis = analyze_market()
-    print_analysis(analysis)
-    await notify_self(analysis)
-    _last_analysis = datetime.now()
+    wait = seconds_until_next_15min()
+    if wait > 0:
+        next_run = (datetime.now() + timedelta(seconds=wait)).strftime('%H:%M')
+        print(f"First run at {next_run} — waiting {int(wait // 60)}m {int(wait % 60)}s...\n")
+        await asyncio.sleep(wait)
 
     while True:
-        await asyncio.sleep(60)
-        now = datetime.now()
+        print(f"\n[{datetime.now().strftime('%H:%M')}] Starting cycle...\n")
 
-        for command, interval_min in MONITOR_SCHEDULE.items():
-            if command in _last_run:
-                elapsed = (now - _last_run[command]).total_seconds() / 60
-                if elapsed >= interval_min:
-                    await run_command(command)
-                    await asyncio.sleep(5)
+        for command in MONITOR_SCHEDULE:
+            await run_command(command)
+            await asyncio.sleep(5)
 
-        if _last_analysis and (now - _last_analysis).total_seconds() / 60 >= 15:
-            print("[AI] Running analysis...")
-            analysis = analyze_market()
-            print_analysis(analysis)
-            await notify_self(analysis)
-            _last_analysis = now
+        print("[AI] Running analysis...")
+        analysis = analyze_market()
+        print_analysis(analysis)
+        await notify_self(analysis)
+
+        wait = seconds_until_next_15min()
+        if wait > 0:
+            next_run = (datetime.now() + timedelta(seconds=wait)).strftime('%H:%M')
+            print(f"Next cycle at {next_run} — waiting {int(wait // 60)}m {int(wait % 60)}s...\n")
+            await asyncio.sleep(wait)
 
 
 async def main():
