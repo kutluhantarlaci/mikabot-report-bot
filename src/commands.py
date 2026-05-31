@@ -66,7 +66,7 @@ PARAMETRIC_COMMANDS = [
 MONITOR_INTERVAL = 1800   # 30 minutes
 
 # Market commands polled continuously — ordered by priority (least critical first, most critical last)
-# Each command takes ~15s, so last commands are freshest when AI analysis runs
+# Last commands are fetched most recently when AI analysis runs
 MONITOR_SCHEDULE = {
     'strongcoin':     3,   # Trending strong coins — changes slowly
     'weakcoin':       3,   # Avoid list — changes slowly
