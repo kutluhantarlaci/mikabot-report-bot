@@ -50,7 +50,7 @@ On first run, Telethon will ask for your phone number and a confirmation code se
 Run everything through the launcher:
 
 ```bash
-python runner.py
+python src/runner.py
 ```
 
 You will be prompted to choose a mode:
@@ -62,6 +62,14 @@ You will be prompted to choose a mode:
 ```
 
 While a mode is running, type `restart` to restart it or `stop` to quit.
+
+**Or double-click a shortcut in `scripts/`:**
+
+| File | Mode |
+|---|---|
+| `scripts/discovery.bat` | Discovery |
+| `scripts/monitor.bat` | Monitor |
+| `scripts/main.bat` | Main |
 
 ### Monitor mode output
 
@@ -79,23 +87,28 @@ Saves all MikaBot responses to `data/knowledge_base.json`.
 
 ```
 MikabotReportBot/
-├── runner.py   # Mode launcher with restart/stop control
-├── monitor.py   # Continuous monitor + Groq AI analysis
-├── discovery.py   # One-time command discovery
-├── main.py   # Quick one-off test
-├── commands.py   # Command lists and monitor schedule
-├── read_pdfs.py   # PDF reader utility
-├── start-discovery.bat   # Double-click to start Discovery mode
-├── start-monitor.bat   # Double-click to start Monitor mode
-├── start-main.bat   # Double-click to start Main mode
-├── requirements.txt
-├── .env   # Your secrets (not committed)
-├── .env.example   # Template for .env
-├── update_readme.py   # Auto-updates this README before each commit
+├── src/
+│   ├── runner.py   # Mode launcher with restart/stop control
+│   ├── monitor.py   # Continuous monitor + Groq AI analysis
+│   ├── discovery.py   # One-time command discovery
+│   ├── main.py   # Quick one-off test
+│   ├── commands.py   # Command lists and monitor schedule
+│   └── query_coins.py
+├── utils/
+│   ├── read_pdfs.py   # PDF reader utility
+│   ├── generate_commands_pdf.py
+│   └── update_readme.py   # Auto-updates this README before each commit
+├── scripts/
+│   ├── discovery.bat   # Double-click to start Discovery mode
+│   ├── monitor.bat   # Double-click to start Monitor mode
+│   └── main.bat   # Double-click to start Main mode
 ├── data/
 │   ├── knowledge_base.json   # Discovery output
 │   └── market_log.json       # Monitor log (last 500 entries)
-└── assets/                   # MikaBot PDF guides
+├── assets/                   # MikaBot PDF guides
+├── requirements.txt
+├── .env   # Your secrets (not committed)
+└── .env.example   # Template for .env
 ```
 
 ## Environment Variables

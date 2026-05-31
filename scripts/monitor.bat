@@ -1,5 +1,6 @@
 @echo off
 title MikaBot - Monitor
 echo Starting Monitor mode...
-python monitor.py
+cd /d "%~dp0.."
+python src\monitor.py
 pause

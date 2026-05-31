@@ -1,5 +1,8 @@
 import subprocess
 import sys
+import os
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
 
 print("Which mode do you want to run?")
 print("  1 - discovery  (run all commands once, build knowledge base)")
@@ -15,7 +18,8 @@ if not script:
     print("Invalid choice.")
     sys.exit(1)
 
-process = subprocess.Popen([sys.executable, script])
+script_path = os.path.join(_HERE, script)
+process = subprocess.Popen([sys.executable, script_path])
 print(f"\n{script} started. Type 'restart' to restart or 'stop' to quit.\n")
 
 while True:
@@ -24,7 +28,7 @@ while True:
         if cmd == 'restart':
             process.terminate()
             process.wait()
-            process = subprocess.Popen([sys.executable, script])
+            process = subprocess.Popen([sys.executable, script_path])
             print(f"{script} restarted.")
         elif cmd in ('stop', 'exit', 'quit'):
             process.terminate()

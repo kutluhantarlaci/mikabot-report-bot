@@ -1,5 +1,6 @@
 @echo off
 title MikaBot - Main
 echo Starting Main mode...
-python main.py
+cd /d "%~dp0.."
+python src\main.py
 pause
