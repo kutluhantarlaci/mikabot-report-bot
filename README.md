@@ -6,9 +6,11 @@ A Python bot that connects to [MikaBot](https://t.me/tradermikabot) — a Turkis
 
 - **Discovery mode** — sends every MikaBot command once, saves all responses to `data/knowledge_base.json`
 - **Test mode** — quick one-off check (`help` + `egitim` commands)
-- **Monitor mode** — continuous market monitoring, runs at exact :00 :15 :30 :45 clock boundaries
+- **Monitor mode** — continuous market monitoring, runs at exact :00 :30 clock boundaries
 - **AI analysis** — Groq (llama-3.3-70b) analyses MikaBot data every cycle and sends summary to Telegram Saved Messages
-- **Auto NLS alarms** — sets MikaBot exit alarms for every buy candidate, auto-closes futures positions when 15m + 1h turn bearish
+- **Deep-dive** — after monitor cycle, runs sr/ls/t for every buy+sell candidate, filters with hard rules before NLS alarms
+- **Auto NLS alarms** — sets MikaBot exit alarms only for deep-dive-confirmed coins, auto-closes futures positions when 15m + 1h turn bearish
+- **Sell scanner** — detects overbought coins for short positions (MTS ≥ 1.5, BLS ≤ 2, not weakcoin), sets auto-close alarms on MikaBot
 
 ## Requirements
 
