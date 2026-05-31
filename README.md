@@ -73,7 +73,7 @@ While a mode is running, type `restart` to restart it or `stop` to quit.
 
 ### Monitor mode output
 
-Every 15 minutes the bot:
+Every 30 minutes the bot:
 1. Fetches: `ka`, `ssreport`, `MarketAnaliz`, `ap`, `BestLongShort`, `strongcoin`, `weakcoin`, `ci s2 d`, `inout`, `dayhigh`
 2. Runs Groq AI analysis on the combined data
 3. Prints the analysis to the terminal
