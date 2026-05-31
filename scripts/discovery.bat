@@ -1,5 +1,6 @@
 @echo off
 title MikaBot - Discovery
 echo Starting Discovery mode...
-python discovery.py
+cd /d "%~dp0.."
+python src\discovery.py
 pause
