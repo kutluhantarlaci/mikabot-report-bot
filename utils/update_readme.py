@@ -18,8 +18,9 @@ FILE_DESC = {
     'discovery.py':             'One-time command discovery',
     'main.py':                  'Quick one-off test',
     'commands.py':              'Command lists and monitor schedule',
+    'query_coins.py':           'One-off deep-dive utility for ad-hoc coin queries',
     'read_pdfs.py':             'PDF reader utility',
-    'generate_commands_pdf.py': '',
+    'generate_commands_pdf.py': 'Generates the MikaBot commands reference PDF',
     'update_readme.py':         'Auto-updates this README before each commit',
     'discovery.bat':            'Double-click to start Discovery mode',
     'monitor.bat':              'Double-click to start Monitor mode',
@@ -29,7 +30,7 @@ FILE_DESC = {
     '.env.example':             'Template for .env',
 }
 
-SRC_ORDER     = ['runner.py', 'monitor.py', 'discovery.py', 'main.py', 'commands.py']
+SRC_ORDER     = ['runner.py', 'monitor.py', 'discovery.py', 'main.py', 'commands.py', 'query_coins.py']
 UTILS_ORDER   = ['read_pdfs.py', 'generate_commands_pdf.py', 'update_readme.py']
 SCRIPTS_ORDER = ['discovery.bat', 'monitor.bat', 'main.bat']
 ROOT_ORDER    = ['requirements.txt', '.env', '.env.example']

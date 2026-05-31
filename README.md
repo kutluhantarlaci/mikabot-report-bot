@@ -95,10 +95,10 @@ MikabotReportBot/
 │   ├── discovery.py   # One-time command discovery
 │   ├── main.py   # Quick one-off test
 │   ├── commands.py   # Command lists and monitor schedule
-│   └── query_coins.py
+│   └── query_coins.py   # One-off deep-dive utility for ad-hoc coin queries
 ├── utils/
 │   ├── read_pdfs.py   # PDF reader utility
-│   ├── generate_commands_pdf.py
+│   ├── generate_commands_pdf.py   # Generates the MikaBot commands reference PDF
 │   └── update_readme.py   # Auto-updates this README before each commit
 ├── scripts/
 │   ├── discovery.bat   # Double-click to start Discovery mode
